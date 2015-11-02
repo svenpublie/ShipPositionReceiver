@@ -7,7 +7,7 @@ import java.util.concurrent.TimeoutException;
  * Created by Sven on 2/11/2015.
  */
 public interface InputChannel {
-    void init() throws InputChannelException, IOException, TimeoutException;
+    void init() throws InputChannelException;
     String getNextMessage() throws InputChannelException;
     void shutDown() throws InputChannelException;
 }
