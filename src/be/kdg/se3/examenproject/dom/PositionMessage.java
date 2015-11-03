@@ -16,7 +16,7 @@ public class PositionMessage {
     public PositionMessage() {
     }
 
-    public PositionMessage (int shipId, int centraleId, double distanceToQuade, Date timestamp) {
+    public PositionMessage(int shipId, int centraleId, double distanceToQuade, Date timestamp) {
         this.shipId = shipId;
         this.centraleId = centraleId;
         this.distanceToQuade = distanceToQuade;

@@ -12,9 +12,17 @@ import java.util.Map;
 public class ShipProxyHandler {
     private ShipServiceProxy shipServiceProxy;
     private final String URL = "www.services4se3.com/shipservice/";
-    private String shipInfo;
+    private String shipInfo = null;
+
+    private int tryCounter;
+    private int clearCacheCounter;
 
     Map<Integer, String> shipMap = new HashMap<Integer, String>();
+
+    public ShipProxyHandler(int tryCounter, int clearCacheCounter) {
+        this.tryCounter = tryCounter;
+        this.clearCacheCounter = clearCacheCounter;
+    }
 
     /**
      * @param shipId: the shipId of the PositionMessage
@@ -23,11 +31,17 @@ public class ShipProxyHandler {
      */
     public String getInfo(int shipId) throws ShipProxyHandlerException {
         try {
-            if (shipMap.containsKey(shipId))
-                shipInfo = shipMap.get(shipId);
-            else {
-                shipInfo = shipServiceProxy.get(URL + shipId);
-                shipMap.put(shipId, shipInfo);
+            int i = 0;
+            while (shipInfo == null && tryCounter > i ) {
+                if (shipMap.containsKey(shipId))
+                    shipInfo = shipMap.get(shipId);
+                else {
+                    shipInfo = shipServiceProxy.get(URL + shipId);
+                    shipMap.put(shipId, shipInfo);
+                }
+                i++;
+                if(shipMap.size() > clearCacheCounter)
+                    shipMap.clear();
             }
             return shipInfo;
         } catch (Exception e) {
