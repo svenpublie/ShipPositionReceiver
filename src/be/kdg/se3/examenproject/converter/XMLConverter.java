@@ -17,9 +17,15 @@ public class XMLConverter {
      */
     public PositionMessage convertMessage(String strMessage) throws XMLConverterException {
         try {
-            StringReader stringReader = new StringReader(strMessage);
-            Unmarshaller unmarshaller = new Unmarshaller();
-            return (PositionMessage) unmarshaller.unmarshal(PositionMessage.class, stringReader);
+            if (strMessage != null) {
+                StringReader stringReader = new StringReader(strMessage);
+                Unmarshaller unmarshaller = new Unmarshaller();
+                return (PositionMessage) unmarshaller.unmarshal(PositionMessage.class, stringReader);
+            }
+            else {
+                return null;
+            }
+
         } catch (Exception e) {
             throw  new XMLConverterException("Exception while converting a XML-String to a PositionMessage", e);
         }

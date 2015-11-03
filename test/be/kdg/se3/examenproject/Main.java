@@ -40,7 +40,7 @@ public class Main {
         ShipProxyHandler shipProxyHandler = new ShipProxyHandler(proxyHandlerTryToConnectLimit, proxyHandlerClearCacheLimit);
         shipProxyHandler.setShipServiceProxy(new ShipServiceProxy());
 
-        int sleepInterval = 200;
+        int sleepInterval = 2000;
         Processor processor = new Processor(inputChannel, dbWriter, xmlConverter, sleepInterval);
         processor.start();
 

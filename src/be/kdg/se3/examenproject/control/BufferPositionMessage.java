@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class BufferPositionMessage implements Buffer {
     private int limit;
+    private int shipId;
     private List<PositionMessage> positionMessages = new ArrayList<PositionMessage>();
 
     public BufferPositionMessage(int limit) {
@@ -26,8 +27,8 @@ public class BufferPositionMessage implements Buffer {
             positionMessages.clear();
         positionMessages.add(positionMessage);
     }
-    @Override
 
+    @Override
     public void clearBuffer() {
         positionMessages.clear();
     }

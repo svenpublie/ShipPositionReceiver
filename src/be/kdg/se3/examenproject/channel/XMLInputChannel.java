@@ -13,6 +13,7 @@ public class XMLInputChannel implements InputChannel {
     private ConnectionFactory factory;
     private final static String QUEUE_NAME = "ships";
     private final static String HOST_NAME = "localhost";
+    private boolean sent = false;
 
     String message;
     Connection connection;
@@ -52,6 +53,7 @@ public class XMLInputChannel implements InputChannel {
 
     @Override
     public String getNextMessage() throws InputChannelException {
+
         return message;
     }
 

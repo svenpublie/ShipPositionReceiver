@@ -20,7 +20,7 @@ public class Processor {
     private DBWriter dbWriter;
     private XMLConverter xmlConverter;
 
-    private final int sleepinterval;
+    private final int sleepInterval;
     boolean stopped;
     String message;
 
@@ -30,7 +30,7 @@ public class Processor {
         this.inputChannel = inputChannel;
         this.dbWriter = dbWriter;
         this.xmlConverter = xmlConverter;
-        this.sleepinterval = sleepInterval;
+        this.sleepInterval = sleepInterval;
     }
 
     public void start() throws ProcessorException {
@@ -43,7 +43,7 @@ public class Processor {
                     PositionMessage positionMessage = xmlConverter.convertMessage(message);
                     dbWriter.writeMessageToDatabase(positionMessage);
                     //System.out.println(message);
-                    Thread.sleep(sleepinterval);
+                    Thread.sleep(sleepInterval);
                 } catch (InputChannelException e) {
                     logger.error("Exception from the input channel", e);
                 } catch (XMLConverterException e) {
