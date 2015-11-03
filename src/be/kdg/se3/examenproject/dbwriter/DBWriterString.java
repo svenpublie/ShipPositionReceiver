@@ -7,7 +7,9 @@ import be.kdg.se3.examenproject.dom.PositionMessage;
  * to the standard system output.
  * Created by Sven on 3/11/2015.
  */
-public class DBWriterString {
+public class DBWriterString implements DBWriter {
+
+    @Override
     public void writeMessageToDatabase(PositionMessage positionMessage) throws DBWriterException {
         try {
             System.out.println("\n" + positionMessage);

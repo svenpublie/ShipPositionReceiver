@@ -48,4 +48,8 @@ public class ShipProxyHandler {
             throw new ShipProxyHandlerException("Exception while connecting to the ShipServiceProxy", e);
         }
     }
+
+    public void setShipServiceProxy(ShipServiceProxy shipServiceProxy) {
+        this.shipServiceProxy = shipServiceProxy;
+    }
 }
