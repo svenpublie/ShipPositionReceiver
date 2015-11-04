@@ -33,7 +33,7 @@ public class JSONConverter {
 
             String shipId = jsonObject.getString("IMO");
             boolean dangereousCargo = jsonObject.getBoolean("dangereousCargo");
-            int numberOfPassengers = jsonObject.getInt("numberOfPassengers");
+            int numberOfPassengers = jsonObject.getInt("numberOfPassangers");
 
             String typeCargo;
             int amountCargo;

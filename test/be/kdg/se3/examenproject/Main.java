@@ -3,6 +3,7 @@ package be.kdg.se3.examenproject;
 import be.kdg.se3.examenproject.channel.InputChannel;
 import be.kdg.se3.examenproject.channel.XMLInputChannel;
 import be.kdg.se3.examenproject.control.BufferPositionMessage;
+import be.kdg.se3.examenproject.control.ControlExecutor;
 import be.kdg.se3.examenproject.converter.JSONConverter;
 import be.kdg.se3.examenproject.converter.XMLConverter;
 import be.kdg.se3.examenproject.dbwriter.DBWriter;
@@ -40,8 +41,12 @@ public class Main {
         ShipProxyHandler shipProxyHandler = new ShipProxyHandler(proxyHandlerTryToConnectLimit, proxyHandlerClearCacheLimit);
         shipProxyHandler.setShipServiceProxy(new ShipServiceProxy());
 
+        //Control
+        double bufferLimitInSeconds = 20;
+        ControlExecutor controlExecutor = new ControlExecutor(bufferLimitInSeconds, shipProxyHandler);
+
         int sleepInterval = 2000;
-        Processor processor = new Processor(inputChannel, dbWriter, xmlConverter, sleepInterval);
+        Processor processor = new Processor(inputChannel, dbWriter, xmlConverter, controlExecutor, sleepInterval);
         processor.start();
 
     }
