@@ -1,6 +1,6 @@
 package be.kdg.se3.examenproject.converter;
 
-import be.kdg.se3.examenproject.dom.Incident;
+import be.kdg.se3.examenproject.dom.IncidentReport;
 import be.kdg.se3.examenproject.dom.IncidentMessage;
 import be.kdg.se3.examenproject.dom.ShipPosition;
 import org.exolab.castor.xml.Marshaller;
@@ -45,18 +45,18 @@ public class XMLConverter {
                 return null;
             }
         } catch (Exception e) {
-            throw new XMLConverterException("Exception while converting a XML-String to an Incident", e);
+            throw new XMLConverterException("Exception while converting a XML-String to an IncidentReport", e);
         }
     }
 
-    public String convertIncidentToXML(Incident incident) throws XMLConverterException {
+    public String convertIncidentToXML(IncidentReport incidentReport) throws XMLConverterException {
         try {
             Writer writer = new StringWriter();
             Marshaller marshaller = new Marshaller();
-            marshaller.marshal(incident, writer);
+            marshaller.marshal(incidentReport, writer);
             return writer.toString();
         } catch (Exception e) {
-            throw new XMLConverterException("Exception while converting a incident to a XML-String", e);
+            throw new XMLConverterException("Exception while converting a incidentReport to a XML-String", e);
         }
     }
 }

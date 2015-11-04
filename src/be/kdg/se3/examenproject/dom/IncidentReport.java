@@ -3,14 +3,14 @@ package be.kdg.se3.examenproject.dom;
 /**
  * Created by Sven on 4/11/2015.
  */
-public class Incident {
+public class IncidentReport {
     private int shipId;
     private String incidentType;
     private int numberOfpassengers;
     private boolean dangerousCargo;
     private String action;
 
-    public Incident(int shipId, String incidentType, int numberOfpassengers, boolean dangerousCargo, String action) {
+    public IncidentReport(int shipId, String incidentType, int numberOfpassengers, boolean dangerousCargo, String action) {
         this.shipId = shipId;
         this.incidentType = incidentType;
         this.numberOfpassengers = numberOfpassengers;

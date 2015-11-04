@@ -5,7 +5,7 @@ import be.kdg.se3.examenproject.converter.JSONConverter;
 import be.kdg.se3.examenproject.converter.JSONConverterException;
 import be.kdg.se3.examenproject.converter.XMLConverter;
 import be.kdg.se3.examenproject.converter.XMLConverterException;
-import be.kdg.se3.examenproject.dom.Incident;
+import be.kdg.se3.examenproject.dom.IncidentReport;
 import be.kdg.se3.examenproject.dom.IncidentMessage;
 import be.kdg.se3.examenproject.dom.Ship;
 import be.kdg.se3.examenproject.service.ShipProxyHandler;
@@ -47,9 +47,9 @@ public class IncidentListenerImpl {
             String action = getTypeOfAction(incidentMessage);
 
             ship = getIncidentShipInfo(shipId);
-            //Incident incident = new Incident(shipId, typeOfIncident, ship.getNumberOfPassengers(), ship.getdangereousCargo(), action);
+            //IncidentReport incident = new IncidentReport(shipId, typeOfIncident, ship.getNumberOfPassengers(), ship.getdangereousCargo(), action);
 
-            putIncidentOnOutputChannel(new Incident(shipId, typeOfIncident, ship.getNumberOfPassengers(), ship.getdangereousCargo(), action));
+            putIncidentOnOutputChannel(new IncidentReport(shipId, typeOfIncident, ship.getNumberOfPassengers(), ship.getdangereousCargo(), action));
         } catch (XMLConverterException e) {
             logger.error("Exception while converting XML to IncidentMessage", e);
         } catch (TimeoutException e) {
@@ -87,14 +87,14 @@ public class IncidentListenerImpl {
         return null;
     }
 
-    public void putIncidentOnOutputChannel (Incident incident) throws IOException, TimeoutException{
+    public void putIncidentOnOutputChannel (IncidentReport incidentReport) throws IOException, TimeoutException{
         try {
-            String message = xmlConverter.convertIncidentToXML(incident);
+            String message = xmlConverter.convertIncidentToXML(incidentReport);
             outputChannel.init();
             outputChannel.send(message);
             outputChannel.shutDown();
         } catch (XMLConverterException e) {
-            logger.error("Error while converting Incident to XML");
+            logger.error("Error while converting IncidentReport to XML");
         }
     }
 }
