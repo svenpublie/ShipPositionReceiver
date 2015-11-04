@@ -2,12 +2,13 @@ package be.kdg.se3.examenproject.processor;
 
 import be.kdg.se3.examenproject.channel.InputChannel;
 import be.kdg.se3.examenproject.channel.InputChannelException;
-import be.kdg.se3.examenproject.control.ControlExecutor;
+import be.kdg.se3.examenproject.control.BufferExecutor;
 import be.kdg.se3.examenproject.converter.XMLConverter;
 import be.kdg.se3.examenproject.converter.XMLConverterException;
 import be.kdg.se3.examenproject.dbwriter.DBWriter;
 import be.kdg.se3.examenproject.dbwriter.DBWriterException;
-import be.kdg.se3.examenproject.dom.PositionMessage;
+import be.kdg.se3.examenproject.dom.ShipPosition;
+import be.kdg.se3.examenproject.incident.IncidentListenerImpl;
 import org.apache.log4j.Logger;
 
 
@@ -16,21 +17,27 @@ import org.apache.log4j.Logger;
  */
 public class Processor {
     private InputChannel inputChannel;
+    private InputChannel inputIncidentChannel;
     private DBWriter dbWriter;
     private XMLConverter xmlConverter;
-    private ControlExecutor controlExecutor;
+    private BufferExecutor bufferExecutor;
+    private IncidentListenerImpl incidentListenerImpl;
 
     private final int sleepInterval;
     boolean stopped;
     String message;
 
+    ShipPosition shipPosition = new ShipPosition();
+
     private final Logger logger = Logger.getLogger(this.getClass());
 
-    public Processor(InputChannel inputChannel, DBWriter dbWriter, XMLConverter xmlConverter, ControlExecutor controlExecutor, int sleepInterval) {
+    public Processor(InputChannel inputChannel, InputChannel inputIncidentChannel, IncidentListenerImpl incidentListenerImpl, DBWriter dbWriter, XMLConverter xmlConverter, BufferExecutor bufferExecutor, int sleepInterval) {
         this.inputChannel = inputChannel;
+        this.inputIncidentChannel = inputIncidentChannel;
+        this.incidentListenerImpl = incidentListenerImpl;
         this.dbWriter = dbWriter;
         this.xmlConverter = xmlConverter;
-        this.controlExecutor = controlExecutor;
+        this.bufferExecutor = bufferExecutor;
         this.sleepInterval = sleepInterval;
     }
 
@@ -38,13 +45,16 @@ public class Processor {
         try {
             stopped = false;
             inputChannel.init();
+            inputIncidentChannel.init();
             while (!stopped) {
                 try {
                     message = inputChannel.getNextMessage();
-                    PositionMessage positionMessage = xmlConverter.convertMessage(message);
-                    dbWriter.writeMessageToDatabase(positionMessage);
-                    controlExecutor.putMessageInBuffer(positionMessage);
-                    controlExecutor.controlLastMessage();
+                    shipPosition = xmlConverter.convertMessage(message);
+                    dbWriter.writeMessageToDatabase(shipPosition);
+                    bufferExecutor.putMessageInBuffer(shipPosition);
+                    bufferExecutor.controlLastMessage();
+                    if (inputIncidentChannel.getNextMessage() != null)
+                        incidentListenerImpl.createIncident(inputIncidentChannel.getNextMessage());
                     Thread.sleep(sleepInterval);
                 } catch (InputChannelException e) {
                     logger.error("Exception from the input channel", e);

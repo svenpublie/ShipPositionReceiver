@@ -1,13 +1,12 @@
 package be.kdg.se3.examenproject;
 
-import be.kdg.se3.examenproject.channel.InputChannel;
-import be.kdg.se3.examenproject.channel.XMLInputChannel;
-import be.kdg.se3.examenproject.control.BufferPositionMessage;
-import be.kdg.se3.examenproject.control.ControlExecutor;
+import be.kdg.se3.examenproject.channel.*;
+import be.kdg.se3.examenproject.control.BufferExecutor;
 import be.kdg.se3.examenproject.converter.JSONConverter;
 import be.kdg.se3.examenproject.converter.XMLConverter;
 import be.kdg.se3.examenproject.dbwriter.DBWriter;
 import be.kdg.se3.examenproject.dbwriter.DBWriterString;
+import be.kdg.se3.examenproject.incident.IncidentListenerImpl;
 import be.kdg.se3.examenproject.processor.Processor;
 import be.kdg.se3.examenproject.processor.ProcessorException;
 import be.kdg.se3.examenproject.service.ShipProxyHandler;
@@ -23,6 +22,8 @@ public class Main {
         //Channels
         ConnectionFactory factory = new ConnectionFactory();
         InputChannel inputChannel = new XMLInputChannel(factory);
+        InputChannel incidentChannel = new InputIncidentChannel(factory);
+        OutputChannel outputChannel = new XMLOutputChannel(factory);
 
         //DBWriter
         DBWriter dbWriter = new DBWriterString();
@@ -31,22 +32,21 @@ public class Main {
         JSONConverter jsonConverter = new JSONConverter();
         XMLConverter xmlConverter = new XMLConverter();
 
-        //Buffers
-        int bufferLimitCameraMessage = 200;
-        BufferPositionMessage bufferPositionMessage = new BufferPositionMessage(bufferLimitCameraMessage);
-
         //Proxy
         int proxyHandlerTryToConnectLimit = 10;
         int proxyHandlerClearCacheLimit = 100;
         ShipProxyHandler shipProxyHandler = new ShipProxyHandler(proxyHandlerTryToConnectLimit, proxyHandlerClearCacheLimit);
         shipProxyHandler.setShipServiceProxy(new ShipServiceProxy());
 
+        //Incidents
+        IncidentListenerImpl incidentListenerImpl = new IncidentListenerImpl(shipProxyHandler, outputChannel, xmlConverter);
+
         //Control
-        double bufferLimitInSeconds = 20;
-        ControlExecutor controlExecutor = new ControlExecutor(bufferLimitInSeconds, shipProxyHandler);
+        long bufferLimitInSeconds = 200000;
+        BufferExecutor bufferExecutor = new BufferExecutor(bufferLimitInSeconds, shipProxyHandler);
 
         int sleepInterval = 2000;
-        Processor processor = new Processor(inputChannel, dbWriter, xmlConverter, controlExecutor, sleepInterval);
+        Processor processor = new Processor(inputChannel, incidentChannel, incidentListenerImpl, dbWriter, xmlConverter, bufferExecutor, sleepInterval);
         processor.start();
 
     }

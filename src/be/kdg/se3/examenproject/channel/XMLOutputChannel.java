@@ -12,10 +12,14 @@ import java.util.concurrent.TimeoutException;
  * Created by Sven on 4/11/2015.
  */
 public class XMLOutputChannel implements OutputChannel {
-    private final static String QUEUE_NAME = "test";
+    private final static String QUEUE_NAME = "INCIDENT_REPORT_QUEUE";
     ConnectionFactory factory;
     Connection connection;
     Channel channel;
+
+    public XMLOutputChannel(ConnectionFactory factory) {
+        this.factory = factory;
+    }
 
     @Override
     public void init() throws IOException, TimeoutException {
@@ -29,7 +33,6 @@ public class XMLOutputChannel implements OutputChannel {
         } catch (OutputChannelException e) {
             throw new OutputChannelException("Error while trying to initialize the send queue", e);
         }
-
     }
 
     @Override
@@ -39,8 +42,6 @@ public class XMLOutputChannel implements OutputChannel {
         } catch (OutputChannelException e) {
             throw new OutputChannelException("Error while trying to put a message on the queue", e);
         }
-
-
     }
 
     @Override

@@ -12,10 +12,22 @@ public class Ship {
     private int numberOfPassengers;
     private List<Cargo> cargo;
 
+    public Ship () {
+
+    }
+
     public Ship(String IMONumbuer, boolean dangereousCargo, int numberOfPassengers, List<Cargo> cargo) {
         this.IMONumbuer = IMONumbuer;
         this.dangereousCargo = dangereousCargo;
         this.numberOfPassengers = numberOfPassengers;
         this.cargo = cargo;
+    }
+
+    public boolean getdangereousCargo() {
+        return dangereousCargo;
+    }
+
+    public int getNumberOfPassengers() {
+        return numberOfPassengers;
     }
 }

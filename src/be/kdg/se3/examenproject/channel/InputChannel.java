@@ -9,5 +9,5 @@ import java.util.concurrent.TimeoutException;
 public interface InputChannel {
     void init() throws InputChannelException;
     String getNextMessage() throws InputChannelException;
-    void shutDown() throws InputChannelException;
+    void shutDown() throws InputChannelException, TimeoutException;
 }

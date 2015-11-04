@@ -1,10 +1,14 @@
 package be.kdg.se3.examenproject.converter;
 
 import be.kdg.se3.examenproject.dom.Incident;
-import be.kdg.se3.examenproject.dom.PositionMessage;
+import be.kdg.se3.examenproject.dom.IncidentMessage;
+import be.kdg.se3.examenproject.dom.ShipPosition;
+import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
 
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 
 /**
  * Class to convert XML messages
@@ -16,34 +20,43 @@ public class XMLConverter {
      * @param strMessage: the message in XML-Format
      * @return PositionMessage: the PositionMessage-object that has been converted.
      */
-    public PositionMessage convertMessage(String strMessage) throws XMLConverterException {
+    public ShipPosition convertMessage(String strMessage) throws XMLConverterException {
         try {
             if (strMessage != null) {
                 StringReader stringReader = new StringReader(strMessage);
                 Unmarshaller unmarshaller = new Unmarshaller();
-                return (PositionMessage) unmarshaller.unmarshal(PositionMessage.class, stringReader);
-            }
-            else {
+                return (ShipPosition) unmarshaller.unmarshal(ShipPosition.class, stringReader);
+            } else {
                 return null;
             }
         } catch (Exception e) {
-            throw  new XMLConverterException("Exception while converting a XML-String to a PositionMessage", e);
+            throw new XMLConverterException("Exception while converting a XML-String to a PositionMessage", e);
         }
     }
 
-    public Incident convertIncident(String strMessage) throws XMLConverterException {
+    public IncidentMessage convertIncident(String strMessage) throws XMLConverterException {
         try {
             if (strMessage != null) {
                 StringReader stringReader = new StringReader(strMessage);
-                Unmarshaller unmarshaller = new Unmarshaller();
-                return (Incident) unmarshaller.unmarshal(Incident.class, stringReader);
-            }
-            else {
+                Unmarshaller unmarshaller = new Unmarshaller(); // volgens mij moet ge zelfs geen instantie maken, gwn Unmarshaller.unmarshal(string)
+                //return (IncidentMessage) unmarshaller.unmarshal(IncidentMessage.class, stringReader);
+                return (IncidentMessage) Unmarshaller.unmarshal(IncidentMessage.class, stringReader);
+            } else {
                 return null;
             }
         } catch (Exception e) {
-            throw  new XMLConverterException("Exception while converting a XML-String to a Incident", e);
+            throw new XMLConverterException("Exception while converting a XML-String to an Incident", e);
         }
     }
 
+    public String convertIncidentToXML(Incident incident) throws XMLConverterException {
+        try {
+            Writer writer = new StringWriter();
+            Marshaller marshaller = new Marshaller();
+            marshaller.marshal(incident, writer);
+            return writer.toString();
+        } catch (Exception e) {
+            throw new XMLConverterException("Exception while converting a incident to a XML-String", e);
+        }
+    }
 }

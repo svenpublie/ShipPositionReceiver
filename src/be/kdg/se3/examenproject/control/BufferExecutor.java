@@ -2,8 +2,7 @@ package be.kdg.se3.examenproject.control;
 
 import be.kdg.se3.examenproject.converter.JSONConverter;
 import be.kdg.se3.examenproject.converter.JSONConverterException;
-import be.kdg.se3.examenproject.dom.PositionMessage;
-import be.kdg.se3.examenproject.dom.Ship;
+import be.kdg.se3.examenproject.dom.ShipPosition;
 import be.kdg.se3.examenproject.service.ShipProxyHandler;
 import be.kdg.se3.examenproject.service.ShipProxyHandlerException;
 import org.apache.log4j.Logger;
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * Created by Sven on 4/11/2015.
  */
-public class ControlExecutor {
+public class BufferExecutor {
     private double bufferLimitInSeconds;
     private BufferPositionMessage bufferPositionMessage;
     private List<BufferPositionMessage> bufferPositionMessages = new ArrayList<BufferPositionMessage>();
@@ -25,23 +24,23 @@ public class ControlExecutor {
 
     private final Logger logger = Logger.getLogger(this.getClass());
 
-    public ControlExecutor(double bufferLimitInSeconds, ShipProxyHandler shipProxyHandler) {
+    public BufferExecutor(double bufferLimitInSeconds, ShipProxyHandler shipProxyHandler) {
         this.bufferLimitInSeconds = bufferLimitInSeconds;
         this.shipProxyHandler = shipProxyHandler;
     }
 
-    public void putMessageInBuffer(PositionMessage positionMessage) throws ControlExecutorException, ShipProxyHandlerException, JSONConverterException {
+    public void putMessageInBuffer(ShipPosition shipPosition) throws ControlExecutorException, ShipProxyHandlerException, JSONConverterException {
         try {
-            if(!controlShipBufferExists(positionMessage) && positionMessage != null) {
-                bufferPositionMessage = new BufferPositionMessage(bufferLimitInSeconds, positionMessage.getShipid(), jsonConverter.convertMessageToShip(shipProxyHandler.getInfo(positionMessage.getShipid())));
-                bufferPositionMessage.addPositionMessage(positionMessage);
-                shipIdList.add(positionMessage.getShipid());
+            if(!controlShipBufferExists(shipPosition) && shipPosition != null) {
+                bufferPositionMessage = new BufferPositionMessage(bufferLimitInSeconds, shipPosition.getShipId(), jsonConverter.convertMessageToShip(shipProxyHandler.getInfo(shipPosition.getShipId())));
+                bufferPositionMessage.addPositionMessage(shipPosition);
+                shipIdList.add(shipPosition.getShipId());
                 bufferPositionMessages.add(bufferPositionMessage);
             }
             else {
                 for(BufferPositionMessage bufferPositionMessage : bufferPositionMessages) {
-                    if (bufferPositionMessage.getShipId() == positionMessage.getShipid()) {
-                        bufferPositionMessage.addPositionMessage(positionMessage);
+                    if (bufferPositionMessage.getShipId() == shipPosition.getShipId()) {
+                        bufferPositionMessage.addPositionMessage(shipPosition);
                     }
                 }
             }
@@ -56,18 +55,17 @@ public class ControlExecutor {
 
     public void controlLastMessage() {
         for(BufferPositionMessage bufferPositionMessage : bufferPositionMessages) {
-            int length = bufferPositionMessage.getPositionMessages().size();
+            int index = bufferPositionMessage.getShipPositions().size() - 1;
             Date date = new Date();
-
-            if((date.getTime() - (bufferPositionMessage.getPositionMessages().get(length-1).getTimestamp()).getTime() / 1000) > bufferLimitInSeconds) {
-                bufferPositionMessage.clearBuffer();
+            if((date.getTime() - (bufferPositionMessage.getShipPositions().get(index).getTimestamp()).getTime() / 1000) > bufferLimitInSeconds) {
+                //bufferPositionMessage.clearBuffer();
             }
         }
     }
 
-    public boolean controlShipBufferExists(PositionMessage positionMessage) throws ControlExecutorException {
-        for (Integer i : shipIdList) {
-            if(i == positionMessage.getShipid())
+    public boolean controlShipBufferExists(ShipPosition shipPosition) throws ControlExecutorException {
+        for (int i : shipIdList) {
+            if(i == shipPosition.getShipId())
                 return true;
             else
                 return false;

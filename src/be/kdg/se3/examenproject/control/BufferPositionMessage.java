@@ -1,6 +1,6 @@
 package be.kdg.se3.examenproject.control;
 
-import be.kdg.se3.examenproject.dom.PositionMessage;
+import be.kdg.se3.examenproject.dom.ShipPosition;
 import be.kdg.se3.examenproject.dom.Ship;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
 public class BufferPositionMessage implements Buffer {
     private double limit;
     private int shipId;
-    private List<PositionMessage> positionMessages = new ArrayList<PositionMessage>();
+    private List<ShipPosition> shipPositions = new ArrayList<ShipPosition>();
     private Ship ship;
 
     public BufferPositionMessage(double limit) {
@@ -28,25 +28,23 @@ public class BufferPositionMessage implements Buffer {
 
     /**
      * Adds a position message to the list, clears it when limit is reached
-     * @param positionMessage: the message that needs to be buffered
+     * @param shipPosition: the message that needs to be buffered
      */
-    public void addPositionMessage(PositionMessage positionMessage) {
-        if(positionMessages.size() == limit)
-            positionMessages.clear();
-        positionMessages.add(positionMessage);
+    public void addPositionMessage(ShipPosition shipPosition) {
+        shipPositions.add(shipPosition);
     }
 
 
     @Override
     public void clearBuffer() {
-        positionMessages.clear();
+        shipPositions.clear();
     }
 
-    public Integer getShipId() {
+    public int getShipId() {
         return shipId;
     }
 
-    public List<PositionMessage> getPositionMessages() {
-        return positionMessages;
+    public List<ShipPosition> getShipPositions() {
+        return shipPositions;
     }
 }

@@ -4,27 +4,57 @@ package be.kdg.se3.examenproject.dom;
  * Created by Sven on 4/11/2015.
  */
 public class Incident {
-    private String shipid;
-    private String incidentstatus;
+    private int shipId;
+    private String incidentType;
+    private int numberOfpassengers;
+    private boolean dangerousCargo;
+    private String action;
 
-    public Incident(String shipid, String incidentstatus) {
-        this.shipid = shipid;
-        this.incidentstatus = incidentstatus;
+    public Incident(int shipId, String incidentType, int numberOfpassengers, boolean dangerousCargo, String action) {
+        this.shipId = shipId;
+        this.incidentType = incidentType;
+        this.numberOfpassengers = numberOfpassengers;
+        this.dangerousCargo = dangerousCargo;
+        this.action = action;
     }
 
-    public String getShipid() {
-        return shipid;
+    public Integer getShipid() {
+        return shipId;
     }
 
-    public void setShipid(String shipid) {
-        this.shipid = shipid;
+    public void setShipid(int shipid) {
+        this.shipId = shipid;
     }
 
-    public String getIncidentstatus() {
-        return incidentstatus;
+    public String getIncidentType() {
+        return incidentType;
     }
 
-    public void setIncidentstatus(String incidentstatus) {
-        this.incidentstatus = incidentstatus;
+    public void setIncidentType(String incidentType) {
+        this.incidentType = incidentType;
+    }
+
+    public Integer getNumberOfpassengers() {
+        return numberOfpassengers;
+    }
+
+    public void setNumberOfpassengers(int numberOfpassengers) {
+        this.numberOfpassengers = numberOfpassengers;
+    }
+
+    public boolean getDangerousCargo() {
+        return dangerousCargo;
+    }
+
+    public void setDangerousCargo(boolean dangerousCargo) {
+        this.dangerousCargo = dangerousCargo;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
     }
 }

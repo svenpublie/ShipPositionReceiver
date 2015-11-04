@@ -1,6 +1,6 @@
 package be.kdg.se3.examenproject.dbwriter;
 
-import be.kdg.se3.examenproject.dom.PositionMessage;
+import be.kdg.se3.examenproject.dom.ShipPosition;
 
 /**
  * This class is responsible for writing a PositionMessage
@@ -10,9 +10,9 @@ import be.kdg.se3.examenproject.dom.PositionMessage;
 public class DBWriterString implements DBWriter {
 
     @Override
-    public void writeMessageToDatabase(PositionMessage positionMessage) throws DBWriterException {
+    public void writeMessageToDatabase(ShipPosition shipPosition) throws DBWriterException {
         try {
-            System.out.println("\n" + positionMessage);
+            System.out.println("\n" + shipPosition);
         } catch (Exception e) {
             throw new DBWriterException("Exception while executing the Database writer", e);
         }

@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Created by Sven on 2/11/2015.
+ * Created by Sven on 4/11/2015.
  */
-public class XMLInputChannel implements InputChannel {
+public class InputIncidentChannel implements InputChannel {
     private ConnectionFactory factory;
-    private final static String QUEUE_NAME = "POSITIONSHIP_QUEUE";
+    private final static String QUEUE_NAME = "INCIDENT_QUEUE";
     private final static String HOST_NAME = "localhost";
     private boolean sent = false;
 
@@ -21,7 +21,7 @@ public class XMLInputChannel implements InputChannel {
 
     private final Logger logger = Logger.getLogger(this.getClass());
 
-    public XMLInputChannel(ConnectionFactory factory) {
+    public InputIncidentChannel(ConnectionFactory factory) {
         this.factory = factory;
     }
 
@@ -58,9 +58,8 @@ public class XMLInputChannel implements InputChannel {
     }
 
     @Override
-    public void shutDown() throws InputChannelException, TimeoutException {
+    public void shutDown() throws InputChannelException {
         try {
-            channel.close();
             connection.close();
         } catch (IOException e) {
             e.printStackTrace();
