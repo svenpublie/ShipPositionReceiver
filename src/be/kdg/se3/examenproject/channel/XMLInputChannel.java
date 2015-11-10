@@ -11,7 +11,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class XMLInputChannel implements InputChannel {
     private ConnectionFactory factory;
-    private final static String QUEUE_NAME = "POSITIONSHIP_QUEUE";
+    private final static String QUEUE_NAME = "SHIPPOSITION_QUEUE";
     private final static String HOST_NAME = "localhost";
     private boolean sent = false;
 
