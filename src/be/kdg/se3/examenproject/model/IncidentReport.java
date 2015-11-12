@@ -60,6 +60,6 @@ public class IncidentReport {
     }
 
     public String toString() {
-        return "SENDING INCIDENT OUT\nShip ID: " + this.shipId + "\nIncident type: " + this.incidentType + "\nNumberOfPassengers: " + this.numberOfpassengers + "\nDangarous cargo: " + this.dangerousCargo + "\nAction type: " + this.action;
+        return "\nSENDING INCIDENT OUT\nShip ID: " + this.shipId + "\nIncident type: " + this.incidentType + "\nNumberOfPassengers: " + this.numberOfpassengers + "\nDangarous cargo: " + this.dangerousCargo + "\nAction type: " + this.action;
     }
 }

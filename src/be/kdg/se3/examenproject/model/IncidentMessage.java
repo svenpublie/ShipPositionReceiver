@@ -34,6 +34,6 @@ public class IncidentMessage {
     }
 
     public String toString() {
-        return "INCOMING INCIDENT\nShip ID: " + this.shipId + "\nIncident status: " + this.incidentStatus;
+        return "\nINCOMING INCIDENT\nShip ID: " + this.shipId + "\nIncident status: " + this.incidentStatus;
     }
 }

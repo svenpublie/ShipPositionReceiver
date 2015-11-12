@@ -61,6 +61,7 @@ public class Processor {
                     incidentMessage = inputIncidentChannel.getNextMessage();
 
                     if(positionMessage != null && !positionMessage.equals(previousPositionMessage)) {
+                        logger.info("New position message received");
                         shipPosition = xmlConverter.convertMessage(positionMessage);
                         dbWriter.writeMessageToDatabase(shipPosition);
                         bufferExecutor.putMessageInBuffer(shipPosition);
@@ -68,6 +69,7 @@ public class Processor {
                     }
 
                     if (incidentMessage != null && !incidentMessage.equals(previousIncidentMessage)) {
+                        logger.info("New incident message received");
                         incidentListenerImpl.createIncident(incidentMessage);
                     }
                     Thread.sleep(sleepInterval);

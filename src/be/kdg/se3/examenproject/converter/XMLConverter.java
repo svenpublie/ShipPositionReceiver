@@ -24,13 +24,9 @@ public class XMLConverter {
      */
     public ShipPosition convertMessage(String strMessage) throws XMLConverterException {
         try {
-            if (strMessage != null) {
-                StringReader stringReader = new StringReader(strMessage);
-                Unmarshaller unmarshaller = new Unmarshaller();
-                return (ShipPosition) unmarshaller.unmarshal(ShipPosition.class, stringReader);
-            } else {
-                return null;
-            }
+            StringReader stringReader = new StringReader(strMessage);
+            Unmarshaller unmarshaller = new Unmarshaller();
+            return (ShipPosition) unmarshaller.unmarshal(ShipPosition.class, stringReader);
         } catch (Exception e) {
             logger.error("Exception while converting a XML-String to a PositionMessage");
             throw new XMLConverterException("Exception while converting a XML-String to a PositionMessage", e);
@@ -44,13 +40,9 @@ public class XMLConverter {
      */
     public IncidentMessage convertIncident(String strMessage) throws XMLConverterException {
         try {
-            if (strMessage != null) {
-                StringReader stringReader = new StringReader(strMessage);
-                Unmarshaller unmarshaller = new Unmarshaller();
-                return (IncidentMessage) Unmarshaller.unmarshal(IncidentMessage.class, stringReader);
-            } else {
-                return null;
-            }
+            StringReader stringReader = new StringReader(strMessage);
+            return (IncidentMessage) Unmarshaller.unmarshal(IncidentMessage.class, stringReader);
+
         } catch (Exception e) {
             logger.error("Exception while converting a XML-String to an IncidentReport");
             throw new XMLConverterException("Exception while converting a XML-String to a IncidentMessage", e);
@@ -67,6 +59,7 @@ public class XMLConverter {
             Writer writer = new StringWriter();
             Marshaller marshaller = new Marshaller();
             marshaller.marshal(incidentReport, writer);
+            logger.info("IncidentReport converted to XML");
             return writer.toString();
         } catch (Exception e) {
             logger.error("Exception while converting a incidentReport to a XML-String");

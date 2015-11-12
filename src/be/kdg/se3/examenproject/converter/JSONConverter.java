@@ -48,7 +48,7 @@ public class JSONConverter {
 
                 listCargoConverted.add(new Cargo(typeCargo, amountCargo));
             }
-
+            logger.info("JSON converted to Ship object");
             return new Ship(shipId, dangereousCargo, numberOfPassengers, listCargoConverted);
 
         } catch (Exception e) {
