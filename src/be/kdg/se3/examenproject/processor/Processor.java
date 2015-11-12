@@ -7,12 +7,13 @@ import be.kdg.se3.examenproject.converter.XMLConverter;
 import be.kdg.se3.examenproject.converter.XMLConverterException;
 import be.kdg.se3.examenproject.dbwriter.DBWriter;
 import be.kdg.se3.examenproject.dbwriter.DBWriterException;
-import be.kdg.se3.examenproject.dom.ShipPosition;
+import be.kdg.se3.examenproject.model.ShipPosition;
 import be.kdg.se3.examenproject.incident.IncidentListenerImpl;
 import org.apache.log4j.Logger;
 
 
 /**
+ * Processes the application, reads, controls, buffers
  * Created by Sven on 2/11/2015.
  */
 public class Processor {
@@ -25,7 +26,11 @@ public class Processor {
 
     private final int sleepInterval;
     boolean stopped;
-    String message;
+    String positionMessage = "";
+    String previousPositionMessage = "";
+
+    String incidentMessage = "";
+    String previousIncidentMessage = "";
 
     ShipPosition shipPosition = new ShipPosition();
 
@@ -48,14 +53,22 @@ public class Processor {
             inputIncidentChannel.init();
             while (!stopped) {
                 try {
-                    message = inputChannel.getNextMessage();
-                    shipPosition = xmlConverter.convertMessage(message);
-                    dbWriter.writeMessageToDatabase(shipPosition);
-                    bufferExecutor.putMessageInBuffer(shipPosition);
-                    bufferExecutor.controlLastMessage();
-                    if (inputIncidentChannel.getNextMessage() != null)
-                        incidentListenerImpl.createIncident(inputIncidentChannel.getNextMessage());
+                    positionMessage = inputChannel.getNextMessage();
+                    incidentMessage = inputIncidentChannel.getNextMessage();
+
+                    if(positionMessage != null && !positionMessage.equals(previousPositionMessage)) {
+                        shipPosition = xmlConverter.convertMessage(positionMessage);
+                        dbWriter.writeMessageToDatabase(shipPosition);
+                        bufferExecutor.putMessageInBuffer(shipPosition);
+                        bufferExecutor.controlLastMessage();
+                    }
+
+                    if (incidentMessage != null && !incidentMessage.equals(previousIncidentMessage)) {
+                        incidentListenerImpl.createIncident(incidentMessage);
+                    }
                     Thread.sleep(sleepInterval);
+                    previousPositionMessage = positionMessage;
+                    previousIncidentMessage = incidentMessage;
                 } catch (InputChannelException e) {
                     logger.error("Exception from the input channel", e);
                 } catch (XMLConverterException e) {

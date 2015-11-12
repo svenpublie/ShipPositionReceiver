@@ -1,8 +1,9 @@
-package be.kdg.se3.examenproject.dom;
+package be.kdg.se3.examenproject.model;
 
 import java.util.Date;
 
 /**
+ * Model class for the incoming ShipPosition Messages
  * Created by Sven on 3/11/2015.
  */
 

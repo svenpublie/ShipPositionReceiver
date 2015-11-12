@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * Interface for an inputChannel
  * Created by Sven on 2/11/2015.
  */
 public interface InputChannel {

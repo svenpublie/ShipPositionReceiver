@@ -1,6 +1,7 @@
-package be.kdg.se3.examenproject.dom;
+package be.kdg.se3.examenproject.model;
 
 /**
+ * Model class for the outgoing incident reports
  * Created by Sven on 4/11/2015.
  */
 public class IncidentReport {

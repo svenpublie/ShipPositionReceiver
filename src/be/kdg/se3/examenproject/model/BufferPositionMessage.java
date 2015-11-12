@@ -1,13 +1,12 @@
-package be.kdg.se3.examenproject.control;
+package be.kdg.se3.examenproject.model;
 
-import be.kdg.se3.examenproject.dom.ShipPosition;
-import be.kdg.se3.examenproject.dom.Ship;
+import be.kdg.se3.examenproject.control.Buffer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class buffers the incoming position messages
+ * This class is the model to buffer the shipPosition messages
  * Created by Sven on 3/11/2015.
  */
 public class BufferPositionMessage implements Buffer {
@@ -44,7 +43,15 @@ public class BufferPositionMessage implements Buffer {
         return shipId;
     }
 
+    public void setShip(Ship ship) {
+        this.ship = ship;
+    }
+
     public List<ShipPosition> getShipPositions() {
         return shipPositions;
+    }
+
+    public Ship getShip() {
+        return ship;
     }
 }

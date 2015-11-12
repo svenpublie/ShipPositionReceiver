@@ -1,8 +1,7 @@
 package be.kdg.se3.examenproject.converter;
 
-import be.kdg.se3.examenproject.dom.Cargo;
-import be.kdg.se3.examenproject.dom.Ship;
-import com.rabbitmq.tools.json.JSONReader;
+import be.kdg.se3.examenproject.model.Cargo;
+import be.kdg.se3.examenproject.model.Ship;
 import org.apache.log4j.Logger;
 
 import javax.json.Json;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class converts JSON Messages
+ * This class converts JSON Messages to model class objects
  * Created by Sven on 3/11/2015.
  */
 public class JSONConverter {

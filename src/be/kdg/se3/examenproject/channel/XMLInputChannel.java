@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * Class initializes the queue and reads the incoming shipPosition messages of the message broker
  * Created by Sven on 2/11/2015.
  */
 public class XMLInputChannel implements InputChannel {
@@ -36,9 +37,9 @@ public class XMLInputChannel implements InputChannel {
 
             channel.basicConsume(QUEUE_NAME, true, consumer);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("IO Exception while initializing the XML input queue");
         } catch (TimeoutException e) {
-            e.printStackTrace();
+            logger.error("Timeout error while initializing the XML input queue");
         }
     }
 

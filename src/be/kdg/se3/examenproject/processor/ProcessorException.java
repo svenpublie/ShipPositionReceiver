@@ -1,6 +1,7 @@
 package be.kdg.se3.examenproject.processor;
 
 /**
+ * Wraps the ProcessorExceptions
  * Created by Sven on 2/11/2015.
  */
 public class ProcessorException extends Exception {

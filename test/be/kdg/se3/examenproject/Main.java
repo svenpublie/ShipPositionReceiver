@@ -1,5 +1,6 @@
 package be.kdg.se3.examenproject;
 
+import be.kdg.se3.examenproject.calculator.ETACalculator;
 import be.kdg.se3.examenproject.channel.*;
 import be.kdg.se3.examenproject.control.BufferExecutor;
 import be.kdg.se3.examenproject.converter.JSONConverter;
@@ -12,6 +13,8 @@ import be.kdg.se3.examenproject.processor.ProcessorException;
 import be.kdg.se3.examenproject.service.ShipProxyHandler;
 import be.kdg.se3.proxy.ShipServiceProxy;
 import com.rabbitmq.client.ConnectionFactory;
+
+import java.util.*;
 
 /**
  * Created by Sven on 2/11/2015.
@@ -41,9 +44,16 @@ public class Main {
         //Incidents
         IncidentListenerImpl incidentListenerImpl = new IncidentListenerImpl(shipProxyHandler, outputChannel, xmlConverter);
 
+        //ETA
+        ETACalculator etaCalculator = new ETACalculator();
+
         //Control
         long bufferLimitInSeconds = 200000;
-        BufferExecutor bufferExecutor = new BufferExecutor(bufferLimitInSeconds, shipProxyHandler);
+        //Map for calulating ETA's, Key is shipId and Value is for calculating it every message (=TRUE) or only when entering a new zone (=FALSE)
+        Map<Integer, Boolean> etaCalculatedShipIds = new HashMap<Integer, Boolean>();
+        etaCalculatedShipIds.put(5498634, true);
+        BufferExecutor bufferExecutor = new BufferExecutor(bufferLimitInSeconds, shipProxyHandler, etaCalculatedShipIds, incidentListenerImpl);
+        incidentListenerImpl.setBufferExecutor(bufferExecutor);
 
         int sleepInterval = 2000;
         Processor processor = new Processor(inputChannel, incidentChannel, incidentListenerImpl, dbWriter, xmlConverter, bufferExecutor, sleepInterval);

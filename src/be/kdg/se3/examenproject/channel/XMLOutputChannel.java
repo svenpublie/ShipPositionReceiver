@@ -9,6 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * Initializes an incident report queue and puts incident reports on this queue
  * Created by Sven on 4/11/2015.
  */
 public class XMLOutputChannel implements OutputChannel {

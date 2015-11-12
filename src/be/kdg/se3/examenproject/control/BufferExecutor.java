@@ -2,46 +2,80 @@ package be.kdg.se3.examenproject.control;
 
 import be.kdg.se3.examenproject.converter.JSONConverter;
 import be.kdg.se3.examenproject.converter.JSONConverterException;
-import be.kdg.se3.examenproject.dom.ShipPosition;
+import be.kdg.se3.examenproject.incident.ActionType;
+import be.kdg.se3.examenproject.incident.IncidentListenerImpl;
+import be.kdg.se3.examenproject.model.BufferPositionMessage;
+import be.kdg.se3.examenproject.model.Ship;
+import be.kdg.se3.examenproject.model.ShipPosition;
 import be.kdg.se3.examenproject.service.ShipProxyHandler;
 import be.kdg.se3.examenproject.service.ShipProxyHandlerException;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
+ * Creates a buffer for each new Ship. Puts the incoming shipPosition messages in this buffer
  * Created by Sven on 4/11/2015.
  */
 public class BufferExecutor {
     private double bufferLimitInSeconds;
     private BufferPositionMessage bufferPositionMessage;
+    private IncidentListenerImpl incidentListener;
     private List<BufferPositionMessage> bufferPositionMessages = new ArrayList<BufferPositionMessage>();
     private List<Integer> shipIdList = new ArrayList<Integer>();
+    Map<Integer, Boolean> etaCalculatedShipIds = new HashMap<Integer, Boolean>();
     private ShipProxyHandler shipProxyHandler;
     private JSONConverter jsonConverter = new JSONConverter();
+    private Ship ship = new Ship();
+    private ControlViolation controlViolation;
+
+    private List<String> extraControlZone = new ArrayList<String>();
 
     private final Logger logger = Logger.getLogger(this.getClass());
 
-    public BufferExecutor(double bufferLimitInSeconds, ShipProxyHandler shipProxyHandler) {
+    public BufferExecutor(double bufferLimitInSeconds, ShipProxyHandler shipProxyHandler, Map<Integer, Boolean> etaCalculatedShipIds, IncidentListenerImpl incidentListener) {
         this.bufferLimitInSeconds = bufferLimitInSeconds;
         this.shipProxyHandler = shipProxyHandler;
+        this.etaCalculatedShipIds = etaCalculatedShipIds;
+        this.incidentListener = incidentListener;
+        controlViolation = new ControlViolation(this.incidentListener);
     }
 
-    public void putMessageInBuffer(ShipPosition shipPosition) throws ControlExecutorException, ShipProxyHandlerException, JSONConverterException {
+    /**
+     * Puts the incoming message in the buffer
+     * Creates a new buffer when there is a new ShipId
+     * @param shipPosition, incoming shipPosition message
+     * @throws BufferExecutorException
+     * @throws ShipProxyHandlerException
+     * @throws JSONConverterException
+     */
+    public void putMessageInBuffer(ShipPosition shipPosition) throws BufferExecutorException, ShipProxyHandlerException, JSONConverterException {
         try {
             if(!controlShipBufferExists(shipPosition) && shipPosition != null) {
-                bufferPositionMessage = new BufferPositionMessage(bufferLimitInSeconds, shipPosition.getShipId(), jsonConverter.convertMessageToShip(shipProxyHandler.getInfo(shipPosition.getShipId())));
+                bufferPositionMessage = new BufferPositionMessage(bufferLimitInSeconds, shipPosition.getShipId(), ship);
                 bufferPositionMessage.addPositionMessage(shipPosition);
+
+                ship = jsonConverter.convertMessageToShip(shipProxyHandler.getInfo(shipPosition.getShipId()));
+                ship.setShipId(ship.getIMONumbuer());
+
+                bufferPositionMessage.setShip(ship);
                 shipIdList.add(shipPosition.getShipId());
                 bufferPositionMessages.add(bufferPositionMessage);
+
+
             }
             else {
                 for(BufferPositionMessage bufferPositionMessage : bufferPositionMessages) {
                     if (bufferPositionMessage.getShipId() == shipPosition.getShipId()) {
                         bufferPositionMessage.addPositionMessage(shipPosition);
+                        if(etaCalculatedShipIds.containsKey(ship.getShipId()))
+                            ship.setETA(bufferPositionMessage.getShipPositions(), etaCalculatedShipIds.get(shipPosition.getShipId()));
                     }
+                }
+                if(incidentListener.getActionType().equals(ActionType.ALLESCHEPENVOORANKER)) {
+                    controlViolation.controlHeavyViolationOverall(bufferPositionMessages);
+                } else if(incidentListener.getActionType().equals(ActionType.ALLESCHEPENINZONEVOORANKER)) {
+                    controlViolation.controlHeavyViolationZone(bufferPositionMessages, extraControlZone);
                 }
             }
         } catch(ShipProxyHandlerException e) {
@@ -53,6 +87,10 @@ public class BufferExecutor {
         }
     }
 
+    /**
+     * Controls the time of the last incoming message of all the ships, if it exceeds the bufferLimitInSeconds,
+     * the buffer of this ship will be cleared. Gets called from the Processor class.
+     */
     public void controlLastMessage() {
         for(BufferPositionMessage bufferPositionMessage : bufferPositionMessages) {
             int index = bufferPositionMessage.getShipPositions().size() - 1;
@@ -63,7 +101,7 @@ public class BufferExecutor {
         }
     }
 
-    public boolean controlShipBufferExists(ShipPosition shipPosition) throws ControlExecutorException {
+    public boolean controlShipBufferExists(ShipPosition shipPosition) throws BufferExecutorException {
         for (int i : shipIdList) {
             if(i == shipPosition.getShipId())
                 return true;
@@ -73,6 +111,21 @@ public class BufferExecutor {
         return false;
     }
 
+    public void addExtraControlZone(int shipId) {
+        for(BufferPositionMessage bufferPositionMessage: bufferPositionMessages) {
+            int size = bufferPositionMessage.getShipPositions().size();
+            if(bufferPositionMessage.getShipId() == shipId) {
+                extraControlZone.add(bufferPositionMessage.getShipPositions().get(size-1).getcentraleId());
+            }
+        }
+    }
 
-
+    public void removeExtraControlZone(int shipId) {
+        for(BufferPositionMessage bufferPositionMessage: bufferPositionMessages) {
+            int size = bufferPositionMessage.getShipPositions().size();
+            if(bufferPositionMessage.getShipId() == shipId) {
+                extraControlZone.remove(bufferPositionMessage.getShipPositions().get(size-1).getcentraleId());
+            }
+        }
+    }
 }

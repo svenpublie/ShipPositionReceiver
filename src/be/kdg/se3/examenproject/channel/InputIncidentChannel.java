@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * Class initializes a queue and reads the incoming incidents of the message broker
  * Created by Sven on 4/11/2015.
  */
 public class InputIncidentChannel implements InputChannel {
@@ -62,7 +63,7 @@ public class InputIncidentChannel implements InputChannel {
         try {
             connection.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error while closing the InputIncidentChannel", e);
         }
     }
 }

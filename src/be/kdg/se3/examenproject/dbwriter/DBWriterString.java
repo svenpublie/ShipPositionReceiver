@@ -1,6 +1,6 @@
 package be.kdg.se3.examenproject.dbwriter;
 
-import be.kdg.se3.examenproject.dom.ShipPosition;
+import be.kdg.se3.examenproject.model.ShipPosition;
 
 /**
  * This class is responsible for writing a PositionMessage

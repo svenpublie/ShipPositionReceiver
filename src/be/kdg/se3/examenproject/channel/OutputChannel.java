@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * Interface for outputchannels
  * Created by Sven on 4/11/2015.
  */
 public interface OutputChannel {
