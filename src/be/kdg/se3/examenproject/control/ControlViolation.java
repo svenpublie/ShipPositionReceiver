@@ -2,6 +2,7 @@ package be.kdg.se3.examenproject.control;
 
 import be.kdg.se3.examenproject.buffer.BufferPositionMessage;
 import be.kdg.se3.examenproject.channel.OutputChannelException;
+import be.kdg.se3.examenproject.converter.XMLConverterException;
 import be.kdg.se3.examenproject.model.IncidentReport;
 import be.kdg.se3.examenproject.model.Ship;
 import be.kdg.se3.examenproject.incident.IncidentListenerImpl;
@@ -65,9 +66,9 @@ public class ControlViolation {
         IncidentReport incidentReport = new IncidentReport(ship.getShipId(), "", ship.getNumberOfPassengers(), ship.getdangereousCargo(), VIOLATION);
         try {
             incidentListener.putIncidentOnOutputChannel(incidentReport);
-        } catch (Exception e) {
-            logger.error("Error while putting incident on outputchannel", e);
-            throw new OutputChannelException("Error while putting incident on outputchannel", e);
+        } catch (XMLConverterException e) {
+            logger.error("XML converter exception", e);
+            throw new OutputChannelException("Error while on converting to XML", e);
         }
     }
 }

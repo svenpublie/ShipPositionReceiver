@@ -66,7 +66,7 @@ public class IncidentListenerImpl {
             ship = getIncidentShipInfo(shipId);
 
             putIncidentOnOutputChannel(new IncidentReport(shipId, typeOfIncident, ship.getNumberOfPassengers(), ship.getdangereousCargo(), action));
-        } catch (Exception e) {
+        } catch (XMLConverterException e) {
             logger.error("Exception while converting XML to IncidentMessage", e);
             throw new OutputChannelException("Exception while converting XML to IncidentMessage", e);
         }
