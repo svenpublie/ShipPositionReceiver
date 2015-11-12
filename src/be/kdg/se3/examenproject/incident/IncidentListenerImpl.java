@@ -110,6 +110,11 @@ public class IncidentListenerImpl {
         return "";
     }
 
+    /**
+     * Contacts the shipProxyHandler to get the shipInfo of the ship that is involved with the incoming incident
+     * @param shipId, shipId of the incoming incident message
+     * @return a Ship object from the shipProxy
+     */
     public Ship getIncidentShipInfo(int shipId) {
         try {
             return jsonConverter.convertMessageToShip(shipProxyHandler.getInfo(shipId));

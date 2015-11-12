@@ -118,6 +118,11 @@ public class BufferExecutor implements Buffer {
         return false;
     }
 
+    /**
+     * The list extraZoneControl is a list that keeps the zones where currently an incident is occurring
+     * This method adds an incident zone to the list
+     * @param shipId, is the ship ID from the incoming incident message
+     */
     public void addExtraControlZone(int shipId) {
         for(BufferPositionMessage bufferPositionMessage: bufferPositionMessages) {
             int size = bufferPositionMessage.getShipPositions().size();
@@ -127,6 +132,10 @@ public class BufferExecutor implements Buffer {
         }
     }
 
+    /**
+     * Same as addExtraControlZone but deletes the zone instead of adding it
+     * @param shipId
+     */
     public void removeExtraControlZone(int shipId) {
         for(BufferPositionMessage bufferPositionMessage: bufferPositionMessages) {
             int size = bufferPositionMessage.getShipPositions().size();
