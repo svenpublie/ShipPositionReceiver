@@ -2,7 +2,7 @@ package be.kdg.se3.examenproject;
 
 import be.kdg.se3.examenproject.calculator.ETACalculator;
 import be.kdg.se3.examenproject.channel.*;
-import be.kdg.se3.examenproject.control.BufferExecutor;
+import be.kdg.se3.examenproject.buffer.BufferExecutor;
 import be.kdg.se3.examenproject.converter.JSONConverter;
 import be.kdg.se3.examenproject.converter.XMLConverter;
 import be.kdg.se3.examenproject.dbwriter.DBWriter;

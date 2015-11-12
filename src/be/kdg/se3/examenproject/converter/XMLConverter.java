@@ -46,8 +46,7 @@ public class XMLConverter {
         try {
             if (strMessage != null) {
                 StringReader stringReader = new StringReader(strMessage);
-                Unmarshaller unmarshaller = new Unmarshaller(); // volgens mij moet ge zelfs geen instantie maken, gwn Unmarshaller.unmarshal(string)
-                //return (IncidentMessage) unmarshaller.unmarshal(IncidentMessage.class, stringReader);
+                Unmarshaller unmarshaller = new Unmarshaller();
                 return (IncidentMessage) Unmarshaller.unmarshal(IncidentMessage.class, stringReader);
             } else {
                 return null;

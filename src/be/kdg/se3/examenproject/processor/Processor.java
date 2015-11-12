@@ -2,7 +2,7 @@ package be.kdg.se3.examenproject.processor;
 
 import be.kdg.se3.examenproject.channel.InputChannel;
 import be.kdg.se3.examenproject.channel.InputChannelException;
-import be.kdg.se3.examenproject.control.BufferExecutor;
+import be.kdg.se3.examenproject.buffer.BufferExecutor;
 import be.kdg.se3.examenproject.converter.XMLConverter;
 import be.kdg.se3.examenproject.converter.XMLConverterException;
 import be.kdg.se3.examenproject.dbwriter.DBWriter;
@@ -46,6 +46,10 @@ public class Processor {
         this.sleepInterval = sleepInterval;
     }
 
+    /**
+     * Starts the whole proces of the application
+     * @throws ProcessorException
+     */
     public void start() throws ProcessorException {
         try {
             stopped = false;

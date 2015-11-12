@@ -1,7 +1,8 @@
 package be.kdg.se3.examenproject.incident;
 
 import be.kdg.se3.examenproject.channel.OutputChannel;
-import be.kdg.se3.examenproject.control.BufferExecutor;
+import be.kdg.se3.examenproject.buffer.BufferExecutor;
+import be.kdg.se3.examenproject.channel.OutputChannelException;
 import be.kdg.se3.examenproject.converter.JSONConverter;
 import be.kdg.se3.examenproject.converter.JSONConverterException;
 import be.kdg.se3.examenproject.converter.XMLConverter;
@@ -13,10 +14,8 @@ import be.kdg.se3.examenproject.service.ShipProxyHandler;
 import be.kdg.se3.examenproject.service.ShipProxyHandlerException;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 /**
  * This class will create an incident, define the right action and put a incidentReport back on the outputChannel
@@ -52,9 +51,9 @@ public class IncidentListenerImpl {
      * Converts the XML incident message to a IncidentMessage object, gets the right action,
      * creates an Incident report and sends it to putIncidentOutPutChannel
      * @param message
-     * @throws IOException
+     * @throws OutputChannelException
      */
-    public void createIncident(String message) throws IOException {
+    public void createIncident(String message) throws OutputChannelException {
         try {
             IncidentMessage incidentMessage = xmlConverter.convertIncident(message);
             System.out.println(incidentMessage.toString());
@@ -67,10 +66,9 @@ public class IncidentListenerImpl {
             ship = getIncidentShipInfo(shipId);
 
             putIncidentOnOutputChannel(new IncidentReport(shipId, typeOfIncident, ship.getNumberOfPassengers(), ship.getdangereousCargo(), action));
-        } catch (XMLConverterException e) {
+        } catch (Exception e) {
             logger.error("Exception while converting XML to IncidentMessage", e);
-        } catch (TimeoutException e) {
-            logger.error("Timeout exception", e);
+            throw new OutputChannelException("Exception while converting XML to IncidentMessage", e);
         }
     }
 
@@ -123,7 +121,7 @@ public class IncidentListenerImpl {
         return null;
     }
 
-    public void putIncidentOnOutputChannel (IncidentReport incidentReport) throws IOException, TimeoutException{
+    public void putIncidentOnOutputChannel (IncidentReport incidentReport) throws OutputChannelException, XMLConverterException {
         try {
             String message = xmlConverter.convertIncidentToXML(incidentReport);
             outputChannel.init();
@@ -132,6 +130,10 @@ public class IncidentListenerImpl {
             System.out.println(incidentReport.toString());
         } catch (XMLConverterException e) {
             logger.error("Error while converting IncidentReport to XML");
+            throw new XMLConverterException("Error while converting IncidentReport to XML", e);
+        } catch (OutputChannelException e) {
+            logger.error("Error sending message to outputchannel", e);
+            throw new XMLConverterException("Error sending message to outputchannel", e);
         }
     }
 

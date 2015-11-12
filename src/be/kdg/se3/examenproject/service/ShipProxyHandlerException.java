@@ -1,6 +1,7 @@
 package be.kdg.se3.examenproject.service;
 
 /**
+ * Wraps the ShipProxyHandlerExceptions
  * Created by Sven on 3/11/2015.
  */
 public class ShipProxyHandlerException extends Exception {

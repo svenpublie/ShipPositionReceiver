@@ -1,7 +1,7 @@
-package be.kdg.se3.examenproject.control;
+package be.kdg.se3.examenproject.buffer;
 
 /**
- * Exception thrown while buffering shipPositions
+ * Wraps all the bufferExceptions
  * Created by Sven on 4/11/2015.
  */
 public class BufferExecutorException extends Exception {

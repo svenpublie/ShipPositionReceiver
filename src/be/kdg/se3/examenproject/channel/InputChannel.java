@@ -1,14 +1,29 @@
 package be.kdg.se3.examenproject.channel;
 
-import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Interface for an inputChannel
+ * Interface to communicate with an inputChannel
  * Created by Sven on 2/11/2015.
  */
 public interface InputChannel {
+    /**
+     * Initializes the input channel and starts a connection with it
+     * @throws InputChannelException
+     */
     void init() throws InputChannelException;
+
+    /**
+     * Reads the next message of the queue
+     * @return message from queue in XML format
+     * @throws InputChannelException
+     */
     String getNextMessage() throws InputChannelException;
-    void shutDown() throws InputChannelException, TimeoutException;
+
+    /**
+     * Closes the connection with the queue
+     * @throws InputChannelException
+     * @throws TimeoutException
+     */
+    void shutDown() throws InputChannelException;
 }

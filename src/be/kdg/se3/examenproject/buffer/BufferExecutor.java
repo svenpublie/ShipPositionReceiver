@@ -1,10 +1,11 @@
-package be.kdg.se3.examenproject.control;
+package be.kdg.se3.examenproject.buffer;
 
+import be.kdg.se3.examenproject.channel.OutputChannelException;
+import be.kdg.se3.examenproject.control.ControlViolation;
 import be.kdg.se3.examenproject.converter.JSONConverter;
 import be.kdg.se3.examenproject.converter.JSONConverterException;
 import be.kdg.se3.examenproject.incident.ActionType;
 import be.kdg.se3.examenproject.incident.IncidentListenerImpl;
-import be.kdg.se3.examenproject.model.BufferPositionMessage;
 import be.kdg.se3.examenproject.model.Ship;
 import be.kdg.se3.examenproject.model.ShipPosition;
 import be.kdg.se3.examenproject.service.ShipProxyHandler;
@@ -17,7 +18,7 @@ import java.util.*;
  * Creates a buffer for each new Ship. Puts the incoming shipPosition messages in this buffer
  * Created by Sven on 4/11/2015.
  */
-public class BufferExecutor {
+public class BufferExecutor implements Buffer {
     private double bufferLimitInSeconds;
     private BufferPositionMessage bufferPositionMessage;
     private IncidentListenerImpl incidentListener;
@@ -49,7 +50,8 @@ public class BufferExecutor {
      * @throws ShipProxyHandlerException
      * @throws JSONConverterException
      */
-    public void putMessageInBuffer(ShipPosition shipPosition) throws BufferExecutorException, ShipProxyHandlerException, JSONConverterException {
+    @Override
+    public void putMessageInBuffer(ShipPosition shipPosition) throws BufferExecutorException, ShipProxyHandlerException, JSONConverterException, OutputChannelException {
         try {
             if(!controlShipBufferExists(shipPosition) && shipPosition != null) {
                 bufferPositionMessage = new BufferPositionMessage(bufferLimitInSeconds, shipPosition.getShipId(), ship);
@@ -84,6 +86,9 @@ public class BufferExecutor {
         } catch (JSONConverterException e) {
             logger.error("Error while converting JSON to a Ship object");
             throw new JSONConverterException("Error while converting JSON to a Ship object", e);
+        } catch (OutputChannelException e) {
+            logger.error("Error outputchannel exception", e);
+            throw new OutputChannelException("Error outputchannel exception", e);
         }
     }
 
@@ -91,6 +96,7 @@ public class BufferExecutor {
      * Controls the time of the last incoming message of all the ships, if it exceeds the bufferLimitInSeconds,
      * the buffer of this ship will be cleared. Gets called from the Processor class.
      */
+    @Override
     public void controlLastMessage() {
         for(BufferPositionMessage bufferPositionMessage : bufferPositionMessages) {
             int index = bufferPositionMessage.getShipPositions().size() - 1;
@@ -101,6 +107,7 @@ public class BufferExecutor {
         }
     }
 
+    @Override
     public boolean controlShipBufferExists(ShipPosition shipPosition) throws BufferExecutorException {
         for (int i : shipIdList) {
             if(i == shipPosition.getShipId())

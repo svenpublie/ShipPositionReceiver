@@ -4,7 +4,6 @@ import com.rabbitmq.client.*;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Class initializes a queue and reads the incoming incidents of the message broker
@@ -36,10 +35,9 @@ public class InputIncidentChannel implements InputChannel {
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 
             channel.basicConsume(QUEUE_NAME, true, consumer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error("Error while initializing the incident input channel", e);
+            throw new InputChannelException("Error while initializing the incident input channel", e);
         }
     }
 
@@ -63,6 +61,7 @@ public class InputIncidentChannel implements InputChannel {
             connection.close();
         } catch (IOException e) {
             logger.error("Error while closing the InputIncidentChannel", e);
+            throw new InputChannelException("Error while closing the InputChannel", e);
         }
     }
 }

@@ -9,7 +9,7 @@ import java.util.Map;
  * This class interacts with the ShipServiceProxy
  * Created by Sven on 3/11/2015.
  */
-public class ShipProxyHandler {
+public class ShipProxyHandler extends ShipServiceProxy{
     private ShipServiceProxy shipServiceProxy;
     private final String URL = "www.services4se3.com/shipservice/";
     private String shipInfo = null;
