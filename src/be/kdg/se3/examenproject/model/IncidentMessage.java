@@ -32,4 +32,8 @@ public class IncidentMessage {
     public void setIncidentStatus(String incidentStatus) {
         this.incidentStatus = incidentStatus;
     }
+
+    public String toString() {
+        return "INCOMING INCIDENT\nShip ID: " + this.shipId + "\nIncident status: " + this.incidentStatus;
+    }
 }

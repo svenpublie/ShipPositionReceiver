@@ -56,12 +56,13 @@ public class IncidentListenerImpl {
      */
     public void createIncident(String message) throws IOException {
         try {
-            IncidentMessage incidentMessage1 = xmlConverter.convertIncident(message);
-            int shipId = incidentMessage1.getShipId();
-            String typeOfIncident = incidentMessage1.getIncidentStatus();
+            IncidentMessage incidentMessage = xmlConverter.convertIncident(message);
+            System.out.println(incidentMessage.toString());
+            int shipId = incidentMessage.getShipId();
+            String typeOfIncident = incidentMessage.getIncidentStatus();
 
-            incidentMessage = new IncidentMessage(shipId, typeOfIncident);
-            String action = getTypeOfAction(incidentMessage);
+            this.incidentMessage = new IncidentMessage(shipId, typeOfIncident);
+            String action = getTypeOfAction(this.incidentMessage);
 
             ship = getIncidentShipInfo(shipId);
 
@@ -128,6 +129,7 @@ public class IncidentListenerImpl {
             outputChannel.init();
             outputChannel.send(message);
             outputChannel.shutDown();
+            System.out.println(incidentReport.toString());
         } catch (XMLConverterException e) {
             logger.error("Error while converting IncidentReport to XML");
         }

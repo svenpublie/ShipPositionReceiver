@@ -56,6 +56,6 @@ public class ShipPosition {
     }
 
     public String toString() {
-        return "ShipID: " + this.shipId + "\nCentraleID: " + this.centralId + "\nDistance to quade: " + this.distanceToQuay + "\nTimestamp: " + this.timestamp;
+        return "INCOMING SHIP POSITION\nShipID: " + this.shipId + "\nCentraleID: " + this.centralId + "\nDistance to quade: " + this.distanceToQuay + "\nTimestamp: " + this.timestamp;
     }
 }

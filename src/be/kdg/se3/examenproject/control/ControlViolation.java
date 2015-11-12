@@ -32,10 +32,12 @@ public class ControlViolation {
     public void controlHeavyViolationZone(List<BufferPositionMessage> bufferPositionMessages, List<String> zones) {
         for(BufferPositionMessage bufferPositionMessage : bufferPositionMessages) {
             int size = bufferPositionMessage.getShipPositions().size();
-            for(String zone : zones) {
-                if(bufferPositionMessage.getShipPositions().get(size-2).getDistanceToQuay().byteValue() != bufferPositionMessage.getShipPositions().get(size-1).getDistanceToQuay().byteValue()) {
-                    if(zone.equalsIgnoreCase(bufferPositionMessage.getShipPositions().get(-1).getcentraleId())){
-                        putViolationOnChannel(bufferPositionMessage.getShip());
+            if(bufferPositionMessage.getShipPositions().size() >= 2) {
+                for(String zone : zones) {
+                    if(bufferPositionMessage.getShipPositions().get(size-2).getDistanceToQuay().byteValue() != bufferPositionMessage.getShipPositions().get(size-1).getDistanceToQuay().byteValue()) {
+                        if(zone.equalsIgnoreCase(bufferPositionMessage.getShipPositions().get(-1).getcentraleId())){
+                            putViolationOnChannel(bufferPositionMessage.getShip());
+                        }
                     }
                 }
             }
